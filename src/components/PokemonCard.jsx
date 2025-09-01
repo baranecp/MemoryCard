@@ -3,7 +3,10 @@ import "./PokemonCard.css"
 function PokemonCard({ alt, src, onClick }) {
 
     return (
-        <img className="pokemon-image" src={src} alt={alt} onClick={onClick} />
+        <div className="card" onClick={onClick}>
+            <img src={src} alt={alt} />
+            <p>{alt}</p>
+        </div>
     )
 }
 

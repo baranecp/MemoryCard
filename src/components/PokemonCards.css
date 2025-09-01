@@ -1,9 +1,16 @@
-.pokemons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+header {
+  margin-bottom: 20px;
 }
 
-.pokemons li {
-  list-style: none;
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
 }

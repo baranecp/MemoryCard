@@ -58,12 +58,14 @@ function PokemonCards() {
 
     return (
         <div>
-            <div className="scoreboard">
-                <p>Score: {score}</p>
-                <p>High Score: {highScore}</p>
-            </div>
-
-            <div className="pokemon-grid">
+            <header>
+                <h1>Pokémon Memory Game</h1>
+                <div className="scoreboard">
+                    <p>Score: {score}</p>
+                    <p>High Score: {highScore}</p>
+                </div>
+            </header>
+            <div className="grid">
                 {pokemons.map(pokemon => (
                     <PokemonCard
                         key={pokemon.id}
