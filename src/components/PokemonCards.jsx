@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
 import "./PokemonCards.css"
 import PokemonCard from "./PokemonCard";
+import Modal from "./Modal";
 function PokemonCards() {
 
     const [pokemons, setPokemons] = useState([]);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         fetch('https://pokeapi.co/api/v2/pokemon?limit=12&offset=0')
@@ -35,25 +37,36 @@ function PokemonCards() {
     }
 
     const handlePokemonClick = (name) => {
-        setPokemons(prev => {
-            const clickedPokemon = prev.find(pokemon => pokemon.name === name);
-            if (clickedPokemon.isClicked) {
-                setHighScore(prevHigh => Math.max(prevHigh, score))
-                setScore(0)
+        setPokemons((prev) => {
+            const clicked = prev.find((p) => p.name === name);
 
-                const resetPokemons = prev.map(pokemon => ({ ...pokemon, isClicked: false }))
-                return shuffleArray(resetPokemons)
+            if (clicked.isClicked) {
+                setHighScore((h) => Math.max(h, score));
+                setScore(0);
+                return shuffleArray(prev.map((p) => ({ ...p, isClicked: false })));
             } else {
-                setScore(score + 1)
-                const updated = prev.map(pokemon =>
-                    pokemon.name === name
-                        ? { ...pokemon, isClicked: true }
-                        : pokemon
+                const newScore = score + 1;
+                setScore(newScore);
+
+                if (newScore === prev.length) {
+                    setHighScore((h) => Math.max(h, newScore));
+                    setShowModal(true);
+                }
+
+                return shuffleArray(
+                    prev.map((p) =>
+                        p.name === name ? { ...p, isClicked: true } : p
+                    )
                 );
-                return shuffleArray(updated);
             }
-        })
-    }
+        });
+    };
+
+    const handleCloseModal = () => {
+        setScore(0);
+        setPokemons((prev) => prev.map((p) => ({ ...p, isClicked: false })));
+        setShowModal(false);
+    };
 
 
     return (
@@ -75,6 +88,7 @@ function PokemonCards() {
                     />
                 ))}
             </div>
+            <Modal show={showModal} onClose={handleCloseModal} score={score} />
         </div>
     )
 
