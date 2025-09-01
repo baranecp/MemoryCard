@@ -1,0 +1,57 @@
+import { useEffect, useState } from "react"
+import "./PokemonCards.css"
+import PokemonCard from "./PokemonCard";
+function PokemonCards() {
+
+    const [pokemons, setPokemons] = useState([]);
+
+    useEffect(() => {
+        fetch('https://pokeapi.co/api/v2/pokemon?limit=12&offset=0')
+            .then(response => response.json())
+            .then(data => {
+                const withClickState = data.results.map(pokemon => {
+                    const id = pokemon.url.split("/").filter(Boolean).pop(); // extract id
+                    return {
+                        ...pokemon,
+                        id,
+                        isClicked: false
+                    };
+                });
+                setPokemons(shuffleArray(withClickState));
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+    //Fisher–Yates algorithm to shuffle an array
+    function shuffleArray(array) {
+        const shuffled = [...array]; // copy so we don’t mutate original
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1)); // random index
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // swap
+        }
+        return shuffled;
+    }
+
+    const handlePokemonClick = (name) => {
+        setPokemons(prev => {
+            const updated = prev.map(pokemon =>
+                pokemon.name === name
+                    ? { ...pokemon, isClicked: true }
+                    : pokemon
+            );
+            return shuffleArray(updated); // shuffle after updating
+        });
+    };
+
+    return (
+        <div className="pokemons">
+            {pokemons.map((pokemon) => (
+                <PokemonCard key={pokemon.id} onClick={() => handlePokemonClick(pokemon.name)} alt={pokemon.name} src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`} />
+            ))}
+        </div>
+    )
+
+
+}
+
+export default PokemonCards

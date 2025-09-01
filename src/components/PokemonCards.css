@@ -1,0 +1,9 @@
+.pokemons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pokemons li {
+  list-style: none;
+}
