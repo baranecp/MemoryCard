@@ -41,26 +41,44 @@ function PokemonCards() {
             const clicked = prev.find((p) => p.name === name);
 
             if (clicked.isClicked) {
-                setHighScore((h) => Math.max(h, score));
-                setScore(0);
-                return shuffleArray(prev.map((p) => ({ ...p, isClicked: false })));
+                handleAlreadyClicked();
+                return resetAndShufflePokemons(prev);
             } else {
                 const newScore = score + 1;
-                setScore(newScore);
-
-                if (newScore === prev.length) {
-                    setHighScore((h) => Math.max(h, newScore));
-                    setShowModal(true);
-                }
-
-                return shuffleArray(
-                    prev.map((p) =>
-                        p.name === name ? { ...p, isClicked: true } : p
-                    )
-                );
+                handleScoreUpdate(newScore, prev.length);
+                return shuffleAndMarkClicked(prev, name);
             }
         });
     };
+
+    // --- Helper functions ---
+
+    const handleAlreadyClicked = () => {
+        setHighScore((h) => Math.max(h, score));
+        setScore(0);
+    };
+
+    const handleScoreUpdate = (newScore, totalPokemons) => {
+        setScore(newScore);
+
+        if (newScore === totalPokemons) {
+            setHighScore((h) => Math.max(h, newScore));
+            setShowModal(true);
+        }
+    };
+
+    const resetAndShufflePokemons = (pokemons) => {
+        return shuffleArray(pokemons.map((p) => ({ ...p, isClicked: false })));
+    };
+
+    const shuffleAndMarkClicked = (pokemons, name) => {
+        return shuffleArray(
+            pokemons.map((p) =>
+                p.name === name ? { ...p, isClicked: true } : p
+            )
+        );
+    };
+
 
     const handleCloseModal = () => {
         setScore(0);
@@ -72,7 +90,7 @@ function PokemonCards() {
     return (
         <div>
             <header>
-                <h1>Pokémon Memory Game</h1>
+                <h1>Pokemon Memory Game</h1>
                 <div className="scoreboard">
                     <p>Score: {score}</p>
                     <p>High Score: {highScore}</p>
