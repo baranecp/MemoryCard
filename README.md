@@ -1,6 +1,6 @@
 # MemoryCard
 
-![Preview](preview.png)
+![Preview](./public/preview.png)
 
 A simple memory card matching game built with React + Vite.
 
